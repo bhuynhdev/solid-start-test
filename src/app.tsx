@@ -1,30 +1,12 @@
-import { For } from 'solid-js';
-import { basename, extname } from 'path';
-import { A } from '@solidjs/router';
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
+import { Suspense } from "solid-js";
+import "./app.css";
 
-function extractName(p) {
-  'use server';
-  return basename(p, extname(p));
-}
-
-const links = Object.keys(import.meta.glob('../countries/*')).map((path) => {
-  const name = extractName(path);
-  return { title: name, href: `/countries/${name}` };
-});
-
-export default function Home() {
+export default function App() {
   return (
-    <main>
-      <h1>Hello world!</h1>
-      <ul>
-        <For each={links}>
-          {(link) => (
-            <li>
-              <A href={link.href}>Visit country {link.title}</A>
-            </li>
-          )}
-        </For>
-      </ul>
-    </main>
+    <Router root={(props) => <Suspense>{props.children}</Suspense>}>
+      <FileRoutes />
+    </Router>
   );
 }
